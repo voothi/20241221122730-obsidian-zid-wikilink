@@ -49,12 +49,23 @@ def extract_zid_and_text(input_string):
         zid = match.group(1)
         text = match.group(2).strip()
         return zid, text
+    
+    # Check if the input string is exactly a valid ZID
+    if is_valid_zid(input_string):
+        zid = input_string
+        text = input_string
+        return zid, text
+    
     return None, input_string
 
 def create_wikilink(text, zid=None):
     if zid:
         processed_text = process_string(text)
-        full_zid_name = f"{zid}-{processed_text}"
+        if processed_text == zid:
+            # If the processed text is the same as the zid, do not add it again
+            full_zid_name = f"{zid}"
+        else:
+            full_zid_name = f"{zid}-{processed_text}"
         wikilink = f"[[{full_zid_name}|{text}]]"
     else:
         processed_text = process_string(text)
