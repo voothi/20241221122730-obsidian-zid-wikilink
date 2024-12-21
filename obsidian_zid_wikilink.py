@@ -38,10 +38,17 @@ def generate_zid():
     # Get the current time in the required format
     return datetime.datetime.now().strftime('%Y%m%d%H%M%S')
 
-def create_wikilink(text, zid):
-    processed_text = process_string(text)
-    full_zid_name = f"{zid}-{processed_text}"
-    wikilink = f"[[{full_zid_name}|{text}]]"
+def is_valid_zid(input_string):
+    # Check if the input string is a 14-digit number
+    return re.match(r'^\d{14}$', input_string) is not None
+
+def create_wikilink(text, zid=None):
+    if zid:
+        processed_text = process_string(text)
+        full_zid_name = f"{zid}-{processed_text}"
+        wikilink = f"[[{full_zid_name}|{text}]]"
+    else:
+        wikilink = f"[[{text}|{text}]]"
     return wikilink
 
 def main():
@@ -55,8 +62,13 @@ def main():
     else:
         text_to_process = args.input_string
     
-    zid = generate_zid()
-    wikilink = create_wikilink(text_to_process, zid)
+    if is_valid_zid(text_to_process):
+        # If the input string is already a valid ZID, use it directly
+        wikilink = create_wikilink(text_to_process, zid=None)
+    else:
+        # Generate a new ZID and create a wikilink
+        zid = generate_zid()
+        wikilink = create_wikilink(text_to_process, zid)
     
     set_clipboard_text(wikilink)
     print(wikilink)
