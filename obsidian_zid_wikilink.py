@@ -42,13 +42,25 @@ def is_valid_zid(input_string):
     # Check if the input string is a 14-digit number
     return re.match(r'^\d{14}$', input_string) is not None
 
+def extract_zid_and_text(input_string):
+    # Check if the input string starts with a valid ZID followed by a space or hyphen
+    match = re.match(r'^(\d{14})[-\s](.*)$', input_string)
+    if match:
+        zid = match.group(1)
+        text = match.group(2).strip()
+        return zid, text
+    return None, input_string
+
 def create_wikilink(text, zid=None):
     if zid:
         processed_text = process_string(text)
         full_zid_name = f"{zid}-{processed_text}"
         wikilink = f"[[{full_zid_name}|{text}]]"
     else:
-        wikilink = f"[[{text}|{text}]]"
+        processed_text = process_string(text)
+        zid = generate_zid()
+        full_zid_name = f"{zid}-{processed_text}"
+        wikilink = f"[[{full_zid_name}|{text}]]"
     return wikilink
 
 def main():
@@ -62,13 +74,15 @@ def main():
     else:
         text_to_process = args.input_string
     
-    if is_valid_zid(text_to_process):
-        # If the input string is already a valid ZID, use it directly
-        wikilink = create_wikilink(text_to_process, zid=None)
+    # Check if the input string starts with a ZID followed by a space or hyphen
+    zid, text = extract_zid_and_text(text_to_process)
+    
+    if zid:
+        # If a ZID is extracted, use it directly
+        wikilink = create_wikilink(text, zid=zid)
     else:
         # Generate a new ZID and create a wikilink
-        zid = generate_zid()
-        wikilink = create_wikilink(text_to_process, zid)
+        wikilink = create_wikilink(text_to_process, zid=None)
     
     set_clipboard_text(wikilink)
     print(wikilink)
