@@ -4,7 +4,7 @@ import re
 import datetime
 
 def get_clipboard_text():
-    return pyperclip.paste()
+    return pyperclip.paste().strip()
 
 def set_clipboard_text(text):
     pyperclip.copy(text)
