@@ -4,13 +4,15 @@ import re
 import datetime
 
 def get_clipboard_text():
+    """Получает текст из буфера обмена."""
     return pyperclip.paste().strip()
 
 def set_clipboard_text(text):
+    """Помещает текст в буфер обмена."""
     pyperclip.copy(text)
 
 def replace_german_chars(input_string):
-    # Replacement for German special characters
+    """Заменяет немецкие спецсимволы (оставлено для совместимости)."""
     replacements = {
         'ä': 'ae', 'ö': 'oe', 'ü': 'ue', 'ß': 'ss', 'ẞ': 'ss',
         'Ä': 'ae', 'Ö': 'oe', 'Ü': 'ue'
@@ -20,37 +22,40 @@ def replace_german_chars(input_string):
     return input_string
 
 def process_string(input_string):
-    # Apply replacements for German characters
+    """Очищает и форматирует строку для имени файла."""
+    # Применяем замены для немецких символов
     input_string = replace_german_chars(input_string)
     
-    # Allow hyphens to remain and remove other unwanted characters
+    # Удаляем все символы, кроме букв, цифр, пробелов и дефисов
     cleaned_string = re.sub(r'[^a-zA-Zа-яА-ЯёЁ0-9\s-]', '', input_string)
     
-    # Convert the string to lowercase
+    # Преобразуем строку в нижний регистр
     cleaned_string = cleaned_string.lower()
     
-    # Replace spaces with "-"
+    # Заменяем пробелы на дефисы
     processed_string = re.sub(r'\s+', '-', cleaned_string)
+    
+    # Убираем возможные двойные дефисы
+    processed_string = re.sub(r'--+', '-', processed_string)
     
     return processed_string
 
 def generate_zid():
-    # Get the current time in the required format
+    """Генерирует Zettelkasten ID на основе текущего времени."""
     return datetime.datetime.now().strftime('%Y%m%d%H%M%S')
 
 def is_valid_zid(input_string):
-    # Check if the input string is a 14-digit number
+    """Проверяет, является ли строка валидным ZID."""
     return re.match(r'^\d{14}$', input_string) is not None
 
 def extract_zid_and_text(input_string):
-    # Check if the input string starts with a valid ZID followed by a space or hyphen
+    """Извлекает ZID и текст из входной строки, если они есть."""
     match = re.match(r'^(\d{14})[-\s](.*)$', input_string)
     if match:
         zid = match.group(1)
         text = match.group(2).strip()
         return zid, text
     
-    # Check if the input string is exactly a valid ZID
     if is_valid_zid(input_string):
         zid = input_string
         text = input_string
@@ -59,19 +64,34 @@ def extract_zid_and_text(input_string):
     return None, input_string
 
 def create_wikilink(text, zid=None):
-    if zid:
-        processed_text = process_string(text)
-        if processed_text == zid:
-            # If the processed text is the same as the zid, do not add it again
-            full_zid_name = f"{zid}"
-        else:
-            full_zid_name = f"{zid}-{processed_text}"
-        wikilink = f"[[{full_zid_name}|{text}]]"
-    else:
-        processed_text = process_string(text)
+    """Создает вики-ссылку с ограничением имени файла до 3 слов."""
+    # Если ZID не предоставлен, генерируем новый
+    if not zid:
         zid = generate_zid()
-        full_zid_name = f"{zid}-{processed_text}"
-        wikilink = f"[[{full_zid_name}|{text}]]"
+
+    # Обрабатываем текст для получения базовой строки имени файла
+    processed_text = process_string(text)
+    
+    # --- НАЧАЛО ИЗМЕНЕНИЙ ---
+    # Обрезаем обработанный текст до 3 слов
+    if processed_text:
+        words = processed_text.split('-')
+        # Берем первые 3 слова. Срез [:3] безопасно обработает строки с < 3 словами.
+        short_processed_text = '-'.join(words[:4])
+    else:
+        short_processed_text = ""
+    # --- КОНЕЦ ИЗМЕНЕНИЙ ---
+
+    # Формируем полное имя файла
+    # Если короткая версия текста пуста (например, исходная строка была только из спецсимволов)
+    # или совпадает с ZID, то используем только ZID.
+    if not short_processed_text or short_processed_text == zid:
+        full_zid_name = f"{zid}"
+    else:
+        full_zid_name = f"{zid}-{short_processed_text}"
+        
+    # Создаем финальную вики-ссылку
+    wikilink = f"[[{full_zid_name}|{text}]]"
     return wikilink
 
 def main():
@@ -85,14 +105,14 @@ def main():
     else:
         text_to_process = args.input_string
     
-    # Check if the input string starts with a ZID followed by a space or hyphen
+    # Извлекаем ZID и текст, если они уже есть во входной строке
     zid, text = extract_zid_and_text(text_to_process)
     
     if zid:
-        # If a ZID is extracted, use it directly
+        # Если ZID был извлечен, используем его и оставшийся текст
         wikilink = create_wikilink(text, zid=zid)
     else:
-        # Generate a new ZID and create a wikilink
+        # Иначе, используем всю строку как текст и генерируем новый ZID
         wikilink = create_wikilink(text_to_process, zid=None)
     
     set_clipboard_text(wikilink)
