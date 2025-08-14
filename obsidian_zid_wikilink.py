@@ -77,7 +77,7 @@ def create_wikilink(text, zid=None):
     if processed_text:
         words = processed_text.split('-')
         # Берем первые 3 слова. Срез [:3] безопасно обработает строки с < 3 словами.
-        short_processed_text = '-'.join(words[:4])
+        short_processed_text = '-'.join(words[:3])
     else:
         short_processed_text = ""
     # --- КОНЕЦ ИЗМЕНЕНИЙ ---
