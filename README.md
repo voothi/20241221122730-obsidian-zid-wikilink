@@ -37,7 +37,8 @@ This tool automates the process of creating structured wikilinks in Obsidian. It
     - Striips special characters (e.g., symbols, punctuation).
     - Replaces spaces with hyphens.
     - **Word Limiting**: Automatically trims the slug to the first **3 words** for clean filenames.
-- **German Character Support**: Replaces `ä`, `ö`, `ü`, and `ß` with `ae`, `oe`, `ue`, and `ss`.
+- **German Character Support**: Replaces `ä`, `ö`, `ü`, and `ß` with `ae`, `oe`, `ue`, and `ss` (including capital variants `Ä`, `Ö`, `Ü`, `ẞ`).
+- **Sentence Boundary Handling**: Automatically converts period-space (`. `) to hyphens for cleaner title-to-description transitions.
 - **Clipboard Integration**: Seamlessly reads from and writes back to the system clipboard.
 - **ZID Detection**: If the input already starts with a ZID, the script extracts it instead of generating a new one.
 - **External Configuration**: Customize word limits, replacements, and regex via `config.ini`.

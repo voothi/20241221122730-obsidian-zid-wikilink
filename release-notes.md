@@ -8,8 +8,12 @@
 
 ### Improvements
 - **Smarter Skip Logic**: Removed the hardcoded heading skip. When `process_non_zid_lines` is enabled, headings will now automatically generate ZIDs (if missing), allowing for mass-conversion of document structures.
-- **Full Synchronization**: Completed logic alignment between `obsidian_zid_wikilink.py` and `ref/zid_name.py`, ensuring consistent behavior regardless of the output format (wikilink vs. filename).
-- **Enhanced Test Suite**: Added 2 new test cases for heading scenarios, bringing the total to 24 verified tests across the ecosystem.
+- **Cross-Project Synchronization**: Verified that the regex updates and prefix preservation logic are identical in both the root wikilink utility and the `ref/` filename utility. This maintains a unified processing engine across the Kardenwort ecosystem.
+- **Sentence Boundary Handling**: Added `'. ': '-'` to the replacements list. This ensures that titles formatted as sentences (e.g., `Title. Description`) are slugified cleanly into `title-description` without relying solely on regex filtering which might leave double hyphens or awkward gaps.
+- **Regex Update**: The standardized regex now includes `#{1,6}\s+`:
+. filename).
+- **Enhanced Test Suite**: Added 2 new test cases for heading scenarios and sentence boundaries, bringing the total to 26 verified tests across the ecosystem.
+- **Improved Sanitization**: Added explicit handling for sentence boundaries (`. ` to `-`) to ensure clean transitions between sentence-like titles and descriptions.
 
 ## [v1.1.0] - 2026-01-05
 
