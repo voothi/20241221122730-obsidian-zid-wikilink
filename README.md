@@ -3,16 +3,19 @@
 [![Version](https://img.shields.io/badge/version-v1.0.0-blue)](file:///u:/voothi/20241221130311-obsidian-zid-wikilink/release-notes.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-A Python utility to generate Obsidian-style wikilinks with Zettelkasten IDs (ZID) and automatically formatted slugs.
+A Python utility to generate Obsidian-style wikilinks with Zettelkasten IDs (ZID) and automatic- Spaces are replaced with hyphens. - **Batch Processing**: Can process multiple lines at once if they contain ZIDs.
 
 ## Table of Contents
 - [Overview](#overview)
 - [Features](#features)
+- [Configuration](#configuration)
 - [Example Flow](#example-flow)
+- [Batch Mode](#batch-mode)
 - [Installation](#installation)
 - [Usage](#usage)
     - [Python Script](#python-script)
     - [AutoHotkey v2 Integration](#autohotkey-v2-integration)
+- [Development](#development)
 - [Project Structure](#project-structure)
 - [Kardenwort Ecosystem](#kardenwort-ecosystem)
 - [License](#license)
@@ -37,8 +40,29 @@ This tool automates the process of creating structured wikilinks in Obsidian. It
 - **German Character Support**: Replaces `ä`, `ö`, `ü`, and `ß` with `ae`, `oe`, `ue`, and `ss`.
 - **Clipboard Integration**: Seamlessly reads from and writes back to the system clipboard.
 - **ZID Detection**: If the input already starts with a ZID, the script extracts it instead of generating a new one.
+- **External Configuration**: Customize word limits, replacements, and regex via `config.ini`.
 
 [Return to Top](#obsidian-zid-wikilink)
+
+## Configuration
+
+You can customize the processing logic by modifying `config.ini`.
+
+```ini
+[Settings]
+slug_word_count = 4
+allowed_chars_regex = [^a-zA-Zа-яА-ЯёЁ0-9\s-]
+
+[Format]
+lowercase = true
+separator = -
+
+[Replacements]
+ä = ae
+ö = oe
+ü = ue
+ß = ss
+```
 
 ## Example Flow
 
@@ -49,6 +73,28 @@ This tool automates the process of creating structured wikilinks in Obsidian. It
 5. **Output**: `[[20241220210224-прошел-малый-круг|Прошел малый круг]]`
 
 [Return to Top](#obsidian-zid-wikilink)
+
+## Batch Mode
+
+If your selection contains multiple lines and some start with a ZID (optionally with list prefixes like `- [ ] `), the script enters **Batch Mode**.
+
+- Each ZID-prefixed line is converted into a wikilink.
+- Original list prefixes and indentation are preserved.
+- Non-ZID lines are left untouched.
+
+**Example Input:**
+```text
+- [ ] 20260105112433 Task One
+- [x] 20260105112434 Task Two
+Just some notes here.
+```
+
+**Example Output:**
+```text
+- [ ] [[20260105112433-task-one|Task One]]
+- [x] [[20260105112434-task-two|Task Two]]
+Just some notes here.
+```
 
 ## Installation
 
@@ -87,9 +133,9 @@ This allows for a "Copy-Process-Paste" workflow in one click.
 - `ref/`: Reference materials and related scripts.
 - `docs/rfcs/`: Request for Comments and design documents.
 - `release-notes.md`: Detailed changelog for each version.
-- `obsidian_zid_wikilink.py`: Main logic.
-- `zid.py`: ZID generation utility.
-- `zid_name.py`: Name formatting utility.
+- `obsidian_zid_wikilink.py`: Main logic (Self-contained).
+- `config.ini`: User configuration.
+- `tests/`: Automated test suite.
 
 [Return to Top](#obsidian-zid-wikilink)
 
