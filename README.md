@@ -36,7 +36,7 @@ This tool automates the process of creating structured wikilinks in Obsidian. It
     - Converts text to lowercase.
     - Striips special characters (e.g., symbols, punctuation).
     - Replaces spaces with hyphens.
-    - **Word Limiting**: Automatically trims the slug to the first **3 words** for clean filenames.
+    - **Word Limiting**: Automatically trims the slug to the first **4 words** for clean filenames.
 - **German Character Support**: Replaces `ä`, `ö`, `ü`, and `ß` with `ae`, `oe`, `ue`, and `ss` (including capital variants `Ä`, `Ö`, `Ü`, `ẞ`).
 - **Sentence Boundary Handling**: Automatically converts period-space (`. `) to hyphens for cleaner title-to-description transitions.
 - **Clipboard Integration**: Seamlessly reads from and writes back to the system clipboard.
@@ -74,11 +74,11 @@ separator = -
 
 ## Example Flow
 
-1. **Input**: `Прошел малый круг. Через темноту решил не идти обратно.`
+1. **Input**: `Project Planning Phase One. Initial requirements gathering.`
 2. **Action**: Run script (with text or clipboard content).
-3. **Step 1 (ZID Generation)**: `20241220210224 Прошел малый круг`
-4. **Step 2 (Slug Creation)**: `20241220210224-прошел-малый-круг` (limited to 3 words).
-5. **Output**: `[[20241220210224-прошел-малый-круг|Прошел малый круг]]`
+3. **Step 1 (ZID Generation)**: `20260105123045 Project Planning Phase One`
+4. **Step 2 (Slug Creation)**: `20260105123045-project-planning-phase-one` (limited to 4 words).
+5. **Output**: `[[20260105123045-project-planning-phase-one|Project Planning Phase One]]`
 
 [Return to Top](#obsidian-zid-wikilink)
 

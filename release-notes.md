@@ -35,8 +35,8 @@
 
 ### Improvements
 - **Prefix Preservation**: Standard regex now detects and keeps Obsidian list symbols (`-`, `*`, `+`, `1.`, `[ ]`).
-- **Standardized Tests**: Added a `unittest` suite in `tests/` for core logic verification.
-- **Documentation**: Updated README with Batch Mode guides and Configuration sections.
+- **Documentation Update**: Replaced project-specific Russian examples in `README.md` with neutral "Project Planning" scenarios for better clarity. Cyrillic support remains fully functional in the core logic.
+- **Consistency**: Updated README to reflect the 4-word default limit and the new `true` default for `add_extension_to_slug`.
 
 ## [v1.0.0] - 2026-01-05
 
