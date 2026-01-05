@@ -1,89 +1,51 @@
-Отвечай на англ.
+# Obsidian ZID Wikilink
 
-Создай скрипт
+A Python utility to generate Obsidian-style wikilinks with Zettelkasten IDs (ZID) and automatically formatted slugs.
 
-obsidian-zid-wikilink.py
+## Overview
 
-Этот скрипт должен выполняться подобно скрипту zid_name.py в этом проекте. Т. е. при запуске он копирует выделенный текст, обрабатывает его и вставляет обработанный.
+This tool automates the process of creating structured wikilinks in Obsidian. It takes a string (or clipboard content), generates a 14-digit ZID, and creates a link in the following format:
+`[[20241220210224-slug-of-text|Original Text]]`
 
-Что должен, собственно, делать этот скрипт?
+The slug is automatically:
+- Converted to lowercase.
+- Stripped of special characters.
+- Limited to the first **3 words** for brevity.
+- Spaces are replaced with hyphens.
 
-Он должен при запуске
+## Installation
 
-- копировать выделенную строку
+### Prerequisites
+- Python 3.x
+- `pyperclip` package
 
+```bash
+pip install pyperclip
+```
 
+## Usage
 
-Пример
+### Python Script
+You can run the script directly:
 
-Есть исходное предложение.
+```bash
+python obsidian_zid_wikilink.py "Your selected text"
+```
 
-`Прошел малый круг. Через темноту решил не идти обратно.`
+If no argument is provided, it will automatically take the text from your clipboard.
 
-Есть подстрока, которую я выделил.
+### AutoHotkey v2 (AHKv2) Integration
+For a seamless workflow in Windows, you can use AutoHotkey to trigger this script with a hotkey.
 
-`Прошел малый круг`
+See the [AHKv2 implementation guide](https://github.com/voothi/20240411110510-autohotkey?tab=readme-ov-file#obsidian-zid-wikilinkahk) for details on how to set up the hotkey.
 
-Далее я запускаю скрипт. Он копирует при запуске выделенный текст. И изменяет его по следующим шагам. Привожу шаги, чтобы лучше объяснить, что требуется от нового скрипта:
+## Project Structure
+- `ref/`: Reference materials and related scripts.
+- `docs/rfcs/`: Request for Comments and design documents.
+- `release-notes.md`: Detailed changelog for each version.
+- `obsidian_zid_wikilink.py`: Main logic.
+- `zid.py`: ZID generation utility.
+- `zid_name.py`: Name formatting utility.
 
-- В начало подстроки добавляется ZID `20241220210224`, который генерируется на базе скрипта zid.py
-
-Получается промежуточный результат
-
-`20241220210224 Прошел малый круг`
-
-Далее преобразуется следующим образом.
-
-Строка на предыдущем шаге берется в двойные квадратные скобки.
-
-`[[20241220210224 Прошел малый круг]]`
-
-Далее.
-
-Создается алиас для получившейся wikilink. Дублитуется подстрока в двойных квадратных скобках через знак | добавляется к справа от исходной подстроки в этих скобках.
-
-Получается
-
-`[[20241220210224 Прошел малый круг|20241220210224 Прошел малый круг]]`
-
-Далее.
-
-К левой части от | внутри квадратных скобок применяется скрипт zid_name.py и в результате, получается такой вид:
-
-`[[20241220210224-прошел-малый-круг|20241220210224 Прошел малый круг]]`
-
-Далее необходимо после |, т.е. в алиасе удалить ZID и пустые пробемлы вокруг получившейся внутренней подстроки алиаса.
-
-Было так
-
-`[[20241220210224-прошел-малый-круг|20241220210224 Прошел малый круг]]`
-
-Должно стать так
-
-`[[20241220210224-прошел-малый-круг|Прошел малый круг]]`
-
-
-
-Эта строка вставляется подобно тому как это реализовано в скрипте zid_name.py.
-
-В результате, в месте выделения в текстовом редакторе появляется новая строка.
-
-[[20241220210224-прошел-малый-круг|Прошел малый круг]]
-
-вместо исходной
-
-`Прошел малый круг`
-
----
-
-У меня есть уже готовые скрипты.
-
-Возьми из них логику и код.
-
-В этом проекте.
-
-Скрипты:
-
-zid.py - генерация ZID (Zettelkasten ID, что является по факту 14 значной строкой из цифр, отражающей текущее относительное время)
-
-zid_name.py - конвертация строки в ZID_NAME (перевод строки в формат названия файла, где ZID стоит в начале строки и затем через разделитель в виде знака `-` идут слова)
+## License
+MIT
