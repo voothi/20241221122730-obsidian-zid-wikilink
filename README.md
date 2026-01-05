@@ -14,7 +14,7 @@ A Python utility to generate Obsidian-style wikilinks with Zettelkasten IDs (ZID
 - [Installation](#installation)
 - [Usage](#usage)
     - [Python Script](#python-script)
-    - [AutoHotkey v2 Integration](#autohotkey-v2-integration)
+    - [AutoHotkey v2 Integration](#autohotkey-v2-ahkv2-integration)
 - [Development](#development)
 - [Project Structure](#project-structure)
 - [Kardenwort Ecosystem](#kardenwort-ecosystem)
