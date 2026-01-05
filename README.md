@@ -58,7 +58,7 @@ You can customize the processing logic by modifying `config.ini`.
 slug_word_count = 4
 process_non_zid_lines = false
 extension_nesting_level = 0
-add_extension_to_slug = false
+add_extension_to_slug = true
 allowed_chars_regex = [^a-zA-Zа-яА-ЯёЁ0-9\s-]
 
 [Format]
