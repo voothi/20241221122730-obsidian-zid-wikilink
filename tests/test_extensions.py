@@ -53,5 +53,14 @@ class TestExtensions(unittest.TestCase):
         expected = "sentend-start"
         self.assertEqual(sanitizeName(input_str, self.cfg), expected)
 
+    def test_conflict_precedence(self):
+        # When both are set, preserve should win (based on if/elif chain)
+        self.cfg['preserve_extension_depth'] = 3
+        self.cfg['slugify_extension_depth'] = 3
+        input_str = "archive.tar.gz"
+        # Expecting preservation (.tar.gz), NOT slugification (-tar-gz)
+        expected = "archive.tar.gz"
+        self.assertEqual(sanitizeName(input_str, self.cfg), expected)
+
 if __name__ == '__main__':
     unittest.main()
