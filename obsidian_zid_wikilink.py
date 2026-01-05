@@ -99,9 +99,9 @@ def process_line(line, cfg, force_wikilink=False):
     """
     Processes a single line: Detects ZID and creates wikilink.
     """
-    # Standard ZID regex
-    zidLineRegex = r'^(\s*(?:(?:[-*+]|\d+\.)(?:\s+\[[ xX]\])?\s+)?)(\d{14})\s+(.*)$'
-    prefixOnlyRegex = r'^(\s*(?:(?:[-*+]|\d+\.)(?:\s+\[[ xX]\])?\s+))(.*)$'
+    # Standard ZID regex (including headings)
+    zidLineRegex = r'^(\s*(?:(?:[-*+]|\d+\.)(?:\s+\[[ xX]\])?\s+|#{1,6}\s+)?)(\d{14})\s+(.*)$'
+    prefixOnlyRegex = r'^(\s*(?:(?:[-*+]|\d+\.)(?:\s+\[[ xX]\])?\s+|#{1,6}\s+))(.*)$'
 
     zid_match = re.match(zidLineRegex, line)
     
@@ -118,8 +118,6 @@ def process_line(line, cfg, force_wikilink=False):
              return create_wikilink_text(line.strip(), new_zid, cfg) if line.strip() else line
         
         if cfg['process_non_zid_lines']:
-             if line.lstrip().startswith('#'):
-                 return line
              
              prefix_match = re.match(prefixOnlyRegex, line)
              if prefix_match:

@@ -49,12 +49,30 @@ class TestObsidianZidWikilink(unittest.TestCase):
         self.assertIn("* [[20260105112434-task-two|Task Two]]", output)
 
     def test_batch_mode_mixed_and_headings(self):
-        # Heading should be preserved exactly
-        input_text = "# Documentation\nJust a comment\n- [ ] 20260105112433 Task One"
+        # Heading with ZID should be processed
+        # Ordinary line should stay if process_non_zid_lines=False
+        input_text = "# 20260105131245 Heading with ZID\nJust a comment\n- [ ] 20260105112433 Task One"
         output = process_string(input_text)
-        self.assertIn("# Documentation", output)
+        self.assertIn("# [[20260105131245-heading-with-zid|Heading with ZID]]", output)
         self.assertIn("Just a comment", output)
         self.assertIn("- [ ] [[20260105112433-task-one|Task One]]", output)
+
+    @patch('obsidian_zid_wikilink.get_config')
+    def test_batch_mode_heading_generation(self, mock_get_config):
+        # If process_non_zid_lines=True, heading should get a new ZID
+        mock_get_config.return_value = {
+            'slug_word_count': 4,
+            'process_non_zid_lines': True,
+            'allowed_chars_regex': r'[^a-zA-Zа-яА-ЯёЁ0-9\s-]',
+            'lowercase': True,
+            'separator': '-',
+            'replacements': self.cfg['replacements']
+        }
+        input_text = "## Heading without ZID\nOrdinary line"
+        output = process_string(input_text)
+        # Should be like ## [[ZID-heading-without-zid|Heading without ZID]]
+        self.assertTrue(re.search(r'## \[\[\d{14}-heading-without-zid\|Heading without ZID\]\]', output))
+        self.assertTrue(re.search(r'\[\[\d{14}-ordinary-line\|Ordinary line\]\]', output))
 
     def test_single_unit_new_zid(self):
         # Smart logic: single line always gets a wikilink
