@@ -1,5 +1,16 @@
 # Release Notes
 
+## [v1.2.0] - 2026-01-05
+
+### Features
+- **Markdown Heading Support**: Added full support for Markdown headings (`#` to `######`) as line prefixes. Headings are now treated like list items—preserved while their titles are converted into ZID-wikilinks.
+- **Standardized Regex**: Updated the ZID detection regex across all scripts to include heading support: `r'^(\s*(?:(?:[-*+]|\d+\.)(?:\s+\[[ xX]\])?\s+|#{1,6}\s+)?)(\d{14})\s+(.*)$'`.
+
+### Improvements
+- **Smarter Skip Logic**: Removed the hardcoded heading skip. When `process_non_zid_lines` is enabled, headings will now automatically generate ZIDs (if missing), allowing for mass-conversion of document structures.
+- **Full Synchronization**: Completed logic alignment between `obsidian_zid_wikilink.py` and `ref/zid_name.py`, ensuring consistent behavior regardless of the output format (wikilink vs. filename).
+- **Enhanced Test Suite**: Added 2 new test cases for heading scenarios, bringing the total to 24 verified tests across the ecosystem.
+
 ## [v1.1.0] - 2026-01-05
 
 ### Features

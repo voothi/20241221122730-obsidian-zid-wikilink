@@ -1,6 +1,6 @@
 # Obsidian ZID Wikilink
 
-[![Version](https://img.shields.io/badge/version-v1.1.0-blue)](https://github.com/voothi/20241221122730-obsidian-zid-wikilink/blob/main/release-notes.md)
+[![Version](https://img.shields.io/badge/version-v1.2.0-blue)](https://github.com/voothi/20241221122730-obsidian-zid-wikilink/blob/main/release-notes.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 A Python utility to generate Obsidian-style wikilinks with Zettelkasten IDs (ZID) and automatic- Spaces are replaced with hyphens. - **Batch Processing**: Can process multiple lines at once if they contain ZIDs.
