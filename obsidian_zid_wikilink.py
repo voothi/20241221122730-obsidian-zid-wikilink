@@ -14,6 +14,7 @@ def get_config():
     defaults = {
         'slug_word_count': 4,
         'process_non_zid_lines': False,
+        'extension_nesting_level': 0,
         'allowed_chars_regex': r'[^a-zA-Zа-яА-ЯёЁ0-9\s-]',
         'lowercase': True,
         'separator': '-',
@@ -32,6 +33,8 @@ def get_config():
         settings = {
             'slug_word_count': config.getint('Settings', 'slug_word_count', fallback=defaults['slug_word_count']),
             'process_non_zid_lines': config.getboolean('Settings', 'process_non_zid_lines', fallback=defaults['process_non_zid_lines']),
+            'extension_nesting_level': config.getint('Settings', 'extension_nesting_level', fallback=defaults['extension_nesting_level']),
+            'add_extension_to_slug': config.getboolean('Settings', 'add_extension_to_slug', fallback=False),
             'allowed_chars_regex': config.get('Settings', 'allowed_chars_regex', fallback=defaults['allowed_chars_regex']),
             'lowercase': config.getboolean('Format', 'lowercase', fallback=defaults['lowercase']),
             'separator': config.get('Format', 'separator', fallback=defaults['separator']),
@@ -45,7 +48,8 @@ def get_config():
             settings['replacements'] = defaults['replacements']
             
         return settings
-    except (configparser.Error, ValueError):
+    except (configparser.Error, ValueError) as e:
+        print(f"Warning: Error reading config.ini, using defaults. Error: {e}")
         return defaults
 
 def generate_zid():
@@ -60,8 +64,51 @@ def set_clipboard_text(text):
 
 def sanitizeName(inputString, cfg):
     """
-    Sanitizes a string for use in a filename (slug).
+    Sanitizes a string: keeps only the first N words (from config),
+    joins them with separator, and converts to lowercase.
+    This function corresponds to sanitizeName in Obsidian templates.
     """
+    # 0. Handle Extensions
+    extension_suffix = ""
+    nesting_level = cfg.get('extension_nesting_level', 0)
+    add_extension_to_slug = cfg.get('add_extension_to_slug', False)
+    
+    parts = inputString.split('.')
+    effective_level = 0
+    
+    if nesting_level > 0:
+        # Calculate effective nesting level: use the configured level, 
+        # but ensure we leave at least one part for the stem (len(parts)-1).
+        effective_level = min(nesting_level, len(parts) - 1)
+    
+    elif add_extension_to_slug:
+        # User wants to force extension inclusion in the slug (hyphenated).
+        if len(parts) > 1:
+            effective_level = 1
+
+    if effective_level > 0:
+        potential_extensions = parts[-effective_level:]
+        
+        # Constraint: Extensions typically do not contain spaces and are not empty.
+        is_valid_extension = all(ext and not re.search(r'\s', ext) for ext in potential_extensions)
+        
+        if is_valid_extension:
+            extensions = potential_extensions
+            stem = parts[:-effective_level]
+            
+            # Reassemble stem so Step 1 can process it
+            inputString = ".".join(stem)
+            
+            # Form the suffix
+            if nesting_level > 0:
+                # Standard extension preservation: .ext
+                extension_suffix = "." + ".".join(extensions)
+            elif add_extension_to_slug:
+                # Slug mode: -ext
+                extension_suffix = cfg['separator'] + cfg['separator'].join(extensions)
+                if cfg['lowercase']:
+                    extension_suffix = extension_suffix.lower()
+
     # 1. Character replacements
     processedString = inputString
     for char, replacement in cfg['replacements'].items():
@@ -77,14 +124,19 @@ def sanitizeName(inputString, cfg):
     # 4. Joining with separator
     finalName = cfg['separator'].join(firstWords)
 
+    # 4.5. Collapse multiple separators (clean up "--" to "-")
+    if cfg['separator']:
+        finalName = re.sub(re.escape(cfg['separator']) + '+', cfg['separator'], finalName)
+
     # 5. Remove trailing separators
     finalName = finalName.rstrip(cfg['separator'])
 
     # 6. Case conversion
     if cfg['lowercase']:
         finalName = finalName.lower()
+        extension_suffix = extension_suffix.lower()
 
-    return finalName
+    return finalName + extension_suffix
 
 def create_wikilink_text(text, zid, cfg):
     """Creates an Obsidian wikilink: [[zid-slug|Original Text]]"""

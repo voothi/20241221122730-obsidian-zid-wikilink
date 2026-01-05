@@ -1,5 +1,15 @@
 # Release Notes
 
+## [v1.2.8] - 2026-01-05
+
+### Sync with zid-name v1.2.8
+- **Feature**: **Extension Control**. Added `extension_nesting_level` and `add_extension_to_slug` to `config.ini`. This allows preserving file extensions (e.g., `.pdf`) or hyphenating them into the slug (e.g., `-pdf`).
+- **Improvement**: **Double Separator Cleanup**. Automatically collapses multiple separators (e.g., `--`) into one for cleaner slugs.
+- **Improvement**: **Modular Test Suite**. Refactored the monolithic test file into `test_basics.py`, `test_zid_logic.py`, and `test_extensions.py`.
+- **Logic Unification**: Fully synchronized the `sanitizeName` algorithm with the latest reference implementation in `zid-name.py`.
+- **Fix**: **Config Stability**. Removed duplicate dot keys in `config.ini` that caused warnings/errors in `configparser`.
+
+
 ## [v1.2.0] - 2026-01-05
 
 ### Features
