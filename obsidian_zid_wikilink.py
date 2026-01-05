@@ -87,25 +87,31 @@ def sanitizeName(inputString, cfg):
         effective_level = min(slugify_depth, len(parts) - 1)
 
     if effective_level > 0:
-        potential_extensions = parts[-effective_level:]
+        # Iterative check: try to find the longest valid suffix of extensions
+        # starting from the requested depth down to 1.
+        found_extensions = []
+        found_stem = []
         
-        # Constraint: Extensions typically do not contain spaces and are not empty.
-        is_valid_extension = all(ext and not re.search(r'\s', ext) for ext in potential_extensions)
-        
-        if is_valid_extension:
-            extensions = potential_extensions
-            stem = parts[:-effective_level]
+        for depth in range(effective_level, 0, -1):
+            potential_extensions = parts[-depth:]
             
+            # Constraint: Extensions typically do not contain spaces and are not empty.
+            if all(ext and not re.search(r'\s', ext) for ext in potential_extensions):
+                found_extensions = potential_extensions
+                found_stem = parts[:-depth]
+                break
+
+        if found_extensions:
             # Reassemble stem so Step 1 can process it
-            inputString = ".".join(stem)
+            inputString = ".".join(found_stem)
             
             # Form the suffix
             if preserve_depth > 0:
                 # Standard extension preservation: .ext
-                extension_suffix = "." + ".".join(extensions)
+                extension_suffix = "." + ".".join(found_extensions)
             elif slugify_depth > 0:
                 # Slug mode: -ext
-                extension_suffix = cfg['separator'] + cfg['separator'].join(extensions)
+                extension_suffix = cfg['separator'] + cfg['separator'].join(found_extensions)
                 if cfg['lowercase']:
                     extension_suffix = extension_suffix.lower()
 
