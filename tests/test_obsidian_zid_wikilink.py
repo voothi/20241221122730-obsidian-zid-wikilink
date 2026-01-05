@@ -36,6 +36,14 @@ class TestObsidianZidWikilink(unittest.TestCase):
         expected = "task-one"
         self.assertEqual(sanitizeName(input_str, self.cfg), expected)
 
+    def test_sentence_boundary(self):
+        # "Title. Description" -> "title-description"
+        input_str = "Title. Description"
+        # .  (dot space) should become -
+        # then "Title-Description" -> "title-description"
+        expected = "title-description"
+        self.assertEqual(sanitizeName(input_str, self.cfg), expected)
+
     def test_batch_mode_simple(self):
         input_text = "20260105112433 Task One\n20260105112434 Task Two"
         output = process_string(input_text)
