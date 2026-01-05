@@ -12,8 +12,8 @@ class TestBasics(unittest.TestCase):
         self.cfg = get_config()
         self.cfg['slug_word_count'] = 4
         self.cfg['separator'] = '-'
-        self.cfg['extension_nesting_level'] = 0
-        self.cfg['add_extension_to_slug'] = True
+        self.cfg['preserve_extension_depth'] = 0
+        self.cfg['slugify_extension_depth'] = 1
 
     def test_sanitizeName_basic(self):
         input_str = "My Simple Title"

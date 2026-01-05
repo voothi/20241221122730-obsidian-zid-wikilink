@@ -3,7 +3,10 @@
 ## [v1.2.8] - 2026-01-05
 
 ### Sync with zid-name v1.2.8
-- **Feature**: **Extension Control**. Added `extension_nesting_level` and `add_extension_to_slug` to `config.ini`. This allows preserving file extensions (e.g., `.pdf`) or hyphenating them into the slug (e.g., `-pdf`).
+- **Configuration Rename**: Replaced `extension_nesting_level` and `add_extension_to_slug` with clearer integer parameters:
+    - `preserve_extension_depth`: Controls how many suffix levels to keep (e.g. `2` for `.tar.gz`).
+    - `slugify_extension_depth`: Controls how many suffix levels to allow to be hyphenated into the slug (e.g. `3` for `-1-de-srt`).
+- **Feature**: **Digital Extension Control**. Both new settings accept an integer (0=disabled) for precise depth control.
 - **Improvement**: **Double Separator Cleanup**. Automatically collapses multiple separators (e.g., `--`) into one for cleaner slugs.
 - **Improvement**: **Modular Test Suite**. Refactored the monolithic test file into `test_basics.py`, `test_zid_logic.py`, and `test_extensions.py`.
 - **Logic Unification**: Fully synchronized the `sanitizeName` algorithm with the latest reference implementation in `zid-name.py`.

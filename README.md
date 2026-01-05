@@ -43,8 +43,8 @@ This tool automates the process of creating structured wikilinks in Obsidian. It
 - **ZID Detection**: If the input already starts with a ZID, the script extracts it instead of generating a new one.
 - **External Configuration**: Customize word limits, replacements, and regex via `config.ini`.
 - **Extension Control**:
-    - Preserve file extensions in slugs (e.g., `.pdf`, `.tar.gz`).
-    - Hyphenate extensions into the slug for clean filenames (e.g., `filename-pdf`).
+    - **`preserve_extension_depth`**: Keeps the last N extensions as a proper file suffix (e.g., `1` -> `.pdf`).
+    - **`slugify_extension_depth`**: Hyphenates the last N extensions into the slug (e.g., `3` -> `-1-de-srt`).
 - **Double Separator Cleanup**: Automatically collapses multiple hyphens for cleaner output.
 
 [Return to Top](#obsidian-zid-wikilink)
@@ -57,8 +57,8 @@ You can customize the processing logic by modifying `config.ini`.
 [Settings]
 slug_word_count = 4
 process_non_zid_lines = false
-extension_nesting_level = 0
-add_extension_to_slug = true
+preserve_extension_depth = 0
+slugify_extension_depth = 3
 allowed_chars_regex = [^a-zA-Zа-яА-ЯёЁ0-9\s-]
 
 [Format]
@@ -78,7 +78,7 @@ separator = -
 2. **Action**: Run script (with text or clipboard content).
 3. **Step 1 (ZID Generation)**: `20260105214044 Nachrichten für Deutschlernende vom 04. November 2025...`
 4. **Step 2 (Slug Creation)**: `20260105214044-nachrichten-fuer-deutschlernende-vom-1-de-srt`
-    - **Note**: The slug is limited to 4 words. With `extension_nesting_level = 3`, the triple extension `.1.de.srt` is detected and incorporated as `-1-de-srt`.
+    - **Note**: The slug is limited to 4 words. With `slugify_extension_depth = 3`, the triple extension `.1.de.srt` is detected and incorporated as `-1-de-srt`.
 5. **Output**: `[[20260105214044-nachrichten-fuer-deutschlernende-vom-1-de-srt|Nachrichten für Deutschlernende vom 04. November 2025  Nachrichten in Einfacher Sprache - German - German.ytsrv3.1.de.srt]]`
 
 [Return to Top](#obsidian-zid-wikilink)

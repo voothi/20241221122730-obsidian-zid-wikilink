@@ -14,34 +14,41 @@ class TestExtensions(unittest.TestCase):
         self.cfg['separator'] = '-'
 
     def test_extension_preservation_pdf(self):
-        self.cfg['extension_nesting_level'] = 1
+        self.cfg['preserve_extension_depth'] = 1
         input_str = "Document title.pdf"
         expected = "document-title.pdf"
         self.assertEqual(sanitizeName(input_str, self.cfg), expected)
 
     def test_extension_preservation_tar_gz(self):
-        self.cfg['extension_nesting_level'] = 2
+        self.cfg['preserve_extension_depth'] = 2
         input_str = "archive.tar.gz"
         expected = "archive.tar.gz"
         self.assertEqual(sanitizeName(input_str, self.cfg), expected)
 
     def test_extension_slug_pdf(self):
-        self.cfg['extension_nesting_level'] = 0
-        self.cfg['add_extension_to_slug'] = True
+        self.cfg['preserve_extension_depth'] = 0
+        self.cfg['slugify_extension_depth'] = 1
         input_str = "Document title.pdf"
         expected = "document-title-pdf"
         self.assertEqual(sanitizeName(input_str, self.cfg), expected)
 
+    def test_extension_slug_deep(self):
+        self.cfg['preserve_extension_depth'] = 0
+        self.cfg['slugify_extension_depth'] = 2
+        input_str = "archive.tar.gz"
+        expected = "archive-tar-gz"
+        self.assertEqual(sanitizeName(input_str, self.cfg), expected)
+
     def test_extension_nesting_fallback(self):
         # level=2 but only 1 extension exists
-        self.cfg['extension_nesting_level'] = 2
+        self.cfg['preserve_extension_depth'] = 2
         input_str = "only-one.pdf"
         expected = "only-one.pdf"
         self.assertEqual(sanitizeName(input_str, self.cfg), expected)
 
     def test_smart_extension_detection_not_extension(self):
         # Dot with space should not be treated as extension
-        self.cfg['extension_nesting_level'] = 1
+        self.cfg['preserve_extension_depth'] = 1
         input_str = "Sentend. Start"
         expected = "sentend-start"
         self.assertEqual(sanitizeName(input_str, self.cfg), expected)
