@@ -45,6 +45,9 @@ This tool automates the process of creating structured wikilinks in Obsidian. It
 - **Extension Control**:
     - **`preserve_extension_depth`**: Keeps the last N extensions as a proper file suffix (e.g., `1` -> `.pdf`).
     - **`slugify_extension_depth`**: Hyphenates the last N extensions into the slug (e.g., `3` -> `-1-de-srt`).
+    
+    > [!NOTE]
+    > **Precedence**: If both settings are greater than 0, `preserve_extension_depth` takes priority (the extension will be kept as a suffix).
 - **Double Separator Cleanup**: Automatically collapses multiple hyphens for cleaner output.
 
 [Return to Top](#obsidian-zid-wikilink)
