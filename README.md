@@ -74,11 +74,12 @@ separator = -
 
 ## Example Flow
 
-1. **Input**: `Project Planning Phase One. Initial requirements gathering.`
+1. **Input**: `Nachrichten für Deutschlernende vom 04. November 2025  Nachrichten in Einfacher Sprache - German - German.ytsrv3.1.de.srt`
 2. **Action**: Run script (with text or clipboard content).
-3. **Step 1 (ZID Generation)**: `20260105123045 Project Planning Phase One`
-4. **Step 2 (Slug Creation)**: `20260105123045-project-planning-phase-one` (limited to 4 words).
-5. **Output**: `[[20260105123045-project-planning-phase-one|Project Planning Phase One]]`
+3. **Step 1 (ZID Generation)**: `20260105214044 Nachrichten für Deutschlernende vom 04. November 2025...`
+4. **Step 2 (Slug Creation)**: `20260105214044-nachrichten-fuer-deutschlernende-vom-srt`
+    - **Note**: The slug is limited to 4 words, but the file extension `.srt` is preserved/appended due to `add_extension_to_slug = true`.
+5. **Output**: `[[20260105214044-nachrichten-fuer-deutschlernende-vom-srt|Nachrichten für Deutschlernende vom 04. November 2025  Nachrichten in Einfacher Sprache - German - German.ytsrv3.1.de.srt]]`
 
 [Return to Top](#obsidian-zid-wikilink)
 
