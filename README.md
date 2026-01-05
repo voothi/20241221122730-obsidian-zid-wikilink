@@ -1,6 +1,6 @@
 # Obsidian ZID Wikilink
 
-[![Version](https://img.shields.io/badge/version-v1.2.0-blue)](https://github.com/voothi/20241221122730-obsidian-zid-wikilink/blob/main/release-notes.md)
+[![Version](https://img.shields.io/badge/version-v1.2.8-blue)](https://github.com/voothi/20241221122730-obsidian-zid-wikilink/blob/main/release-notes.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 A Python utility to generate Obsidian-style wikilinks with Zettelkasten IDs (ZID) and automatic- Spaces are replaced with hyphens. - **Batch Processing**: Can process multiple lines at once if they contain ZIDs.
@@ -42,6 +42,10 @@ This tool automates the process of creating structured wikilinks in Obsidian. It
 - **Clipboard Integration**: Seamlessly reads from and writes back to the system clipboard.
 - **ZID Detection**: If the input already starts with a ZID, the script extracts it instead of generating a new one.
 - **External Configuration**: Customize word limits, replacements, and regex via `config.ini`.
+- **Extension Control**:
+    - Preserve file extensions in slugs (e.g., `.pdf`, `.tar.gz`).
+    - Hyphenate extensions into the slug for clean filenames (e.g., `filename-pdf`).
+- **Double Separator Cleanup**: Automatically collapses multiple hyphens for cleaner output.
 
 [Return to Top](#obsidian-zid-wikilink)
 
@@ -52,6 +56,9 @@ You can customize the processing logic by modifying `config.ini`.
 ```ini
 [Settings]
 slug_word_count = 4
+process_non_zid_lines = false
+extension_nesting_level = 0
+add_extension_to_slug = false
 allowed_chars_regex = [^a-zA-Zа-яА-ЯёЁ0-9\s-]
 
 [Format]
